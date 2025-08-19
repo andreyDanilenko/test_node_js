@@ -30,6 +30,16 @@ export class ResponseHandler {
     return this.success(res, data, message, 201);
   }
 
+  static noContent(
+    res: Response,
+    message: string = 'No content'
+    ): Response {
+    return res.status(204).json({
+        success: true,
+        message
+    });
+  }
+
   static error(
     res: Response,
     error: Error | string,
