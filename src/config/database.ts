@@ -20,7 +20,7 @@ export const connectDB = async (): Promise<void> => {
     if (process.env.NODE_ENV === 'development') {
       // автомиграция
       // true для разработки чтобы делать сброс базы
-      await sequelize.sync({ force: true });
+      await sequelize.sync({ force: false });
       console.log('Database synchronized.');
     }
   } catch (error) {

@@ -4,7 +4,7 @@ import { IUserRepository } from '../repositories/userRepository';
 import { IUserCreate, IAuthResult } from '../interfaces/user.interface';
 import { AuthenticationError } from '../utils/errors';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'very-secret-key';
 
 export interface IAuthService {
   registerUser(userData: IUserCreate): Promise<IAuthResult>;
