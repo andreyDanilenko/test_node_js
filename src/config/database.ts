@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { User } from '../models/User';
+import { User, Board, StickyNote } from '../models';
 
 export const sequelize = new Sequelize({
   database: process.env.DB_NAME || 'node_test',
@@ -8,7 +8,7 @@ export const sequelize = new Sequelize({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
   dialect: 'postgres',
-  models: [User],
+  models: [User, Board, StickyNote],
   logging: process.env.NODE_ENV === 'development' ? console.log : false,
 });
 
