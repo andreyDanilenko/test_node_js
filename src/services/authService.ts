@@ -45,6 +45,7 @@ export class AuthService implements IAuthService {
     return { user: sanitizedUser, token };
   }
 
+  // Далее можно зашить информацию о роли и тд
   private generateToken(userId: number): string {
     return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '24h' });
   }
