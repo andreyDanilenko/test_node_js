@@ -1,4 +1,24 @@
 # Тестовое задание
+
+## Запуск проекта
+
+Установка зависимостей:
+```
+npm install
+```
+Запустить postgres через Docker (предварительно установить докер): 
+```
+npm run docker:up
+```
+или 
+```
+docker-compose up -d
+```
+Запуск проекта:
+```
+npm run dev
+```
+
 ## Junior Plus Backend‑разработчик (Node.js / TypeScript)
 ### 1. Контекст
 
