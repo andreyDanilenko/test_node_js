@@ -1,5 +1,4 @@
 import { Table, Column, Model, DataType, HasMany, CreatedAt, UpdatedAt } from 'sequelize-typescript';
-import { Post } from './Post';
 
 @Table({
   tableName: 'users',
@@ -43,7 +42,4 @@ export class User extends Model {
 
   @UpdatedAt
   updatedAt!: Date;
-
-  @HasMany(() => Post)
-  posts!: Post[];
 }
