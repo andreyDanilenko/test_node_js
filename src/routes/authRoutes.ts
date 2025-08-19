@@ -1,6 +1,6 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { authController } from '../config/dependencies';
+import { authController } from '../containers/user.container';
 import { validate } from '../middleware/validation.middleware';
 import { loginValidator, registrationValidator } from '../validators/auth.validator';
 
