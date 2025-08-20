@@ -23,10 +23,7 @@ export class StickyNoteService implements IStickyNoteService {
     private boardRepository: IBoardRepository
   ) {}
 
-  async createStickyNote(stickyNoteData: IStickyNoteCreate, userId: number): Promise<IStickyNoteSanitized> {
-    // Проверяем, что доска принадлежит пользователю
-  console.log('stickyNoteData.boardId', stickyNoteData.boardId, userId);
-  
+  async createStickyNote(stickyNoteData: IStickyNoteCreate, userId: number): Promise<IStickyNoteSanitized> {  
     await this.boardRepository.findById(stickyNoteData.boardId, userId);
     
     const stickyNote = await this.stickyNoteRepository.create(stickyNoteData);
@@ -34,7 +31,6 @@ export class StickyNoteService implements IStickyNoteService {
   }
 
   async updateStickyNote(id: number, updates: IStickyNoteUpdate, userId: number): Promise<IStickyNoteSanitized> {
-    // Проверяем доступ пользователя к стикеру
     const hasAccess = await this.stickyNoteRepository.checkUserAccess(id, userId);
     if (!hasAccess) {
       throw new ForbiddenError('Access denied');
@@ -45,7 +41,6 @@ export class StickyNoteService implements IStickyNoteService {
   }
 
   async deleteStickyNote(id: number, userId: number): Promise<void> {
-    // Проверяем доступ пользователя к стикеру
     const hasAccess = await this.stickyNoteRepository.checkUserAccess(id, userId);
     if (!hasAccess) {
       throw new ForbiddenError('Access denied');
