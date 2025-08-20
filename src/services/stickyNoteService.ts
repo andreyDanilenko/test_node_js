@@ -4,7 +4,8 @@ import {
 import { 
   IStickyNoteCreate, 
   IStickyNoteUpdate, 
-  IStickyNoteSanitized 
+  IStickyNoteSanitized, 
+  IStickyNote
 } from '../interfaces/stickyNote.interface';
 import { IBoardRepository } from '../repositories/boardRepository';
 import { ForbiddenError } from '../utils/errors';
@@ -13,6 +14,7 @@ export interface IStickyNoteService {
   createStickyNote(stickyNoteData: IStickyNoteCreate, userId: number): Promise<IStickyNoteSanitized>;
   updateStickyNote(id: number, updates: IStickyNoteUpdate, userId: number): Promise<IStickyNoteSanitized>;
   deleteStickyNote(id: number, userId: number): Promise<void>;
+  getStickyNoteById(id: number, userId: number): Promise<IStickyNote | null>
 }
 
 export class StickyNoteService implements IStickyNoteService {
@@ -23,6 +25,8 @@ export class StickyNoteService implements IStickyNoteService {
 
   async createStickyNote(stickyNoteData: IStickyNoteCreate, userId: number): Promise<IStickyNoteSanitized> {
     // Проверяем, что доска принадлежит пользователю
+  console.log('stickyNoteData.boardId', stickyNoteData.boardId, userId);
+  
     await this.boardRepository.findById(stickyNoteData.boardId, userId);
     
     const stickyNote = await this.stickyNoteRepository.create(stickyNoteData);
@@ -48,5 +52,13 @@ export class StickyNoteService implements IStickyNoteService {
     }
 
     await this.stickyNoteRepository.delete(id);
+  }
+
+  async getStickyNoteById(id: number, userId: number): Promise<IStickyNote | null>  {
+    const stickyNote = await this.stickyNoteRepository.findById(id, userId);
+    if (!stickyNote) {
+      throw new ForbiddenError('Sticky note not found or access denied');
+    }
+    return stickyNote;
   }
 }
