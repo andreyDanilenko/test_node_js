@@ -3,7 +3,8 @@ import type { Request, Response } from 'express';
 import { validate } from '../middleware/validation.middleware';
 import { createBoardValidator } from '../validators/board.validator';
 import { authMiddleware } from '../middleware/authMiddleware';
-import { boardController } from '../containers/board.container';
+import { boardController, stickyNoteController } from '../containers/board.container';
+import { createStickyNoteValidator } from '../validators/stickyNote.validator';
 
 const router = express.Router();
 router.use(authMiddleware);
@@ -22,6 +23,12 @@ router.post(
 router.get(
     '/:id/sticky-notes', 
     (req: Request, res: Response) => boardController.getBoardStickyNotes(req, res)
+);
+
+router.post(
+    '/:id/sticky-notes',
+    validate(createStickyNoteValidator),
+    (req: Request, res: Response) => stickyNoteController.createStickyNote(req, res)
 );
 
 export default router;

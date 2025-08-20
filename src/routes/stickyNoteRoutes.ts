@@ -9,16 +9,16 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.put(
-  '/sticky-notes/:id',
+  '/:id',
   validate(updateStickyNoteValidator),
   (req: Request, res: Response) => stickyNoteController.updateStickyNote(req, res)
 );
 
-router.patch('/sticky-notes/:id/move', (req, res) =>
+router.patch('/:id/move', (req, res) =>
   stickyNoteController.moveStickyNote(req, res)
 );
 
-router.delete('/sticky-notes/:id', (req: Request, res: Response) => 
+router.delete('/:id', (req: Request, res: Response) => 
   stickyNoteController.deleteStickyNote(req, res)
 );
 
