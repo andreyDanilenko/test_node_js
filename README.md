@@ -6,7 +6,7 @@
 ```
 npm install
 ```
-### Запустить postgres через Docker (предварительно установить докер): 
+### Запустить postgres и redis через Docker: 
 ```
 npm run docker:up
 ```
