@@ -4,6 +4,7 @@ import { StickyNote } from '../models/StickyNote';
 
 export interface IBoardService {
   getUserBoards(userId: number): Promise<IBoardSanitized[]>;
+  getAllBoards(): Promise<IBoardSanitized[]>; 
   createBoard(boardData: IBoardCreate): Promise<IBoardSanitized>;
   getBoardWithStickyNotes(boardId: number, userId: number): Promise<any>;
 }
@@ -13,6 +14,11 @@ export class BoardService implements IBoardService {
 
   async getUserBoards(userId: number): Promise<IBoardSanitized[]> {
     const boards = await this.boardRepository.findAllByUserId(userId);
+    return boards.map(board => this.boardRepository.sanitizeBoard(board));
+  }
+
+  async getAllBoards(): Promise<IBoardSanitized[]> {
+    const boards = await this.boardRepository.findAll();
     return boards.map(board => this.boardRepository.sanitizeBoard(board));
   }
 

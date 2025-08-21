@@ -4,6 +4,7 @@ import { NotFoundError } from '../utils/errors';
 
 export interface IBoardRepository {
   findAllByUserId(userId: number): Promise<IBoard[]>;
+  findAll(): Promise<IBoard[]>; 
   findById(id: number, userId?: number): Promise<IBoard>;
   create(boardData: IBoardCreate): Promise<IBoard>;
   sanitizeBoard(board: IBoard): IBoardSanitized;
@@ -13,6 +14,12 @@ export class BoardRepository implements IBoardRepository {
   async findAllByUserId(userId: number): Promise<IBoard[]> {
     return Board.findAll({
       where: { userId },
+      order: [['createdAt', 'DESC']],
+    });
+  }
+
+   async findAll(): Promise<IBoard[]> {
+    return Board.findAll({
       order: [['createdAt', 'DESC']],
     });
   }

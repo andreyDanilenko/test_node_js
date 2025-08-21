@@ -2,15 +2,26 @@ import { Request, Response } from 'express';
 import { IBoardService } from '../services/boardService';
 import { ResponseHandler } from '../utils/response';
 import { AppError } from '../utils/errors';
+import { AuthRequest } from '../middleware/authMiddleware';
+
 
 export class BoardController {
   constructor(private boardService: IBoardService) {}
 
-  async getBoards(req: Request, res: Response): Promise<void> {
+  async getBoards(req: AuthRequest, res: Response): Promise<void> {
     try {
       const userId = (req as any).userId;
       const boards = await this.boardService.getUserBoards(userId);
       ResponseHandler.success(res, boards, 'Boards retrieved successfully');
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
+  async getAllBoards(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const boards = await this.boardService.getAllBoards();
+      ResponseHandler.success(res, boards, 'All boards retrieved successfully');
     } catch (error) {
       this.handleError(error, res);
     }

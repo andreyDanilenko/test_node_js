@@ -14,6 +14,11 @@ router.get(
     (req: Request, res: Response) =>  boardController.getBoards(req, res)
 );
 
+router.get(
+    '/all',
+    (req: Request, res: Response) => boardController.getAllBoards(req, res)
+);
+
 router.post(
     '/',
     validate(createBoardValidator),
