@@ -3,10 +3,12 @@ import { AppError } from '../utils/errors';
 import { Request, Response } from 'express';
 import { IStickyNoteService } from '../services/stickyNoteService';
 import { ResponseHandler } from '../utils/response';
-import { getIO } from '../services/socket';
+import { SocketService } from '../services/socketService';
 
 export class StickyNoteController {
-  constructor(private stickyNoteService: IStickyNoteService) {}
+  constructor(private stickyNoteService: IStickyNoteService,     private socketService: SocketService
+
+) {}
 
   async createStickyNote(req: Request, res: Response): Promise<void> {
     try {      
@@ -23,8 +25,7 @@ export class StickyNoteController {
         boardId: parseInt(id)
       }, userId);
 
-      getIO().emit('sticky_note_created', stickyNote);
-
+      this.socketService.getIO().emit('sticky_note_created', stickyNote);
       ResponseHandler.created(res, stickyNote, 'Sticky note created successfully');
     } catch (error) {
       this.handleError(error, res);
@@ -43,7 +44,7 @@ export class StickyNoteController {
         userId
       );
 
-      getIO().emit('sticky_note_updated', stickyNote);
+      this.socketService.getIO().emit('sticky_note_updated', stickyNote);
 
       ResponseHandler.success(res, stickyNote, 'Sticky note updated successfully');
     } catch (error) {
@@ -58,7 +59,7 @@ export class StickyNoteController {
 
       const stickyNote = await this.stickyNoteService.getStickyNoteById(parseInt(id), userId);
       await this.stickyNoteService.deleteStickyNote(parseInt(id), userId);
-      getIO().emit('sticky_note_deleted', { id: parseInt(id), boardId: stickyNote?.boardId });
+     this.socketService.getIO().emit('sticky_note_deleted', { id: parseInt(id), boardId: stickyNote?.boardId });
 
       ResponseHandler.noContent(res, 'Sticky note deleted successfully');
     } catch (error) {
@@ -78,7 +79,7 @@ export class StickyNoteController {
         userId
       );
 
-      getIO().emit('sticky_note_moved', stickyNote);
+     this.socketService.getIO().emit('sticky_note_moved', stickyNote);
 
       ResponseHandler.success(res, stickyNote, 'Sticky note moved successfully');
     } catch (error) {
