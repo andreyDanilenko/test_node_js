@@ -1,4 +1,6 @@
 import { Server, Socket } from 'socket.io';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
 
 interface ClientInfo {
   connected: Date;
@@ -7,8 +9,16 @@ interface ClientInfo {
 const clients = new Map<string, ClientInfo>();
 let ioInstance: Server | null = null;
 
-export const initSocket = (io: Server) => {
+export const initSocket = async (io: Server) => {
   ioInstance = io;
+
+  const pubClient = createClient({ url: 'redis://localhost:6379' });
+  const subClient = pubClient.duplicate();
+
+  await pubClient.connect();
+  await subClient.connect();
+
+  io.adapter(createAdapter(pubClient, subClient));
 
   io.on('connection', (socket: Socket) => {
     console.log('Клиент подключился:', socket.id);
@@ -28,6 +38,7 @@ export const initSocket = (io: Server) => {
     });
 
     io.emit('clients_count', clients.size);
+
     socket.on('client_message', (msg) => handleClientMessage(io, socket, msg));
     socket.on('disconnect', () => handleDisconnect(io, socket));
     socket.on('error', (error) => console.log('Ошибка:', error));
