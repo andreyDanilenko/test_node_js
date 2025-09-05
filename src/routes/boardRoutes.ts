@@ -7,16 +7,22 @@ import { boardController, stickyNoteController } from '../containers/board.conta
 import { createStickyNoteValidator } from '../validators/stickyNote.validator';
 
 const router = express.Router();
+
+router.get(
+    '/all',
+    (req: Request, res: Response) => boardController.getAllBoards(req, res)
+);
+
+router.get(
+    '/:id/all/sticky-notes',
+    (req: Request, res: Response) => boardController.getPublicBoardStickyNotes(req, res)
+);
+
 router.use(authMiddleware);
 
 router.get(
     '/', 
     (req: Request, res: Response) =>  boardController.getBoards(req, res)
-);
-
-router.get(
-    '/all',
-    (req: Request, res: Response) => boardController.getAllBoards(req, res)
 );
 
 router.post(

@@ -60,6 +60,20 @@ export class BoardController {
     }
   }
 
+  async getPublicBoardStickyNotes(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+
+      const result = await this.boardService.getPublicBoardWithStickyNotes(
+        parseInt(id)
+      );
+
+      ResponseHandler.success(res, result, 'Public board with sticky notes retrieved successfully');
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
   private handleError(error: unknown, res: Response): void {
     if (error instanceof AppError) {
       ResponseHandler.error(res, error, error.statusCode);
