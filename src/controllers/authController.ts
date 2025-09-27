@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/authService';
 import { ResponseHandler } from '../utils/response';
-import { AppError } from '../utils/errors';
+import { AppError, AuthenticationError } from '../utils/errors';
 
 export class AuthController {
     constructor(private authService: AuthService) {}
@@ -28,6 +28,21 @@ export class AuthController {
             const result = await this.authService.loginUser(email, password);
 
             ResponseHandler.success(res, result, 'Login successful');
+        } catch (error) {
+            this.handleError(error, res);
+        }
+    }
+
+    async getCurrentUser(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = (req as any).userId;
+            
+            if (!userId) {
+                throw new AuthenticationError('User not authenticated');
+            }
+
+            const user = await this.authService.getUserById(userId);
+            ResponseHandler.success(res, user, 'User retrieved successfully');
         } catch (error) {
             this.handleError(error, res);
         }

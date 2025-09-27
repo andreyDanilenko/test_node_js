@@ -5,7 +5,7 @@ import {
   IStickyNoteUpdate, 
   IStickyNoteSanitized 
 } from '../interfaces/stickyNote.interface';
-import { NotFoundError, ForbiddenError } from '../utils/errors';
+import { NotFoundError } from '../utils/errors';
 
 export interface IStickyNoteRepository {
   findById(id: number, userId?: number): Promise<IStickyNote | null>;
@@ -80,7 +80,7 @@ export class StickyNoteRepository implements IStickyNoteRepository {
     return !!stickyNote;
   }
 
-  sanitizeStickyNote(stickyNote: IStickyNote): IStickyNoteSanitized {
+  sanitizeStickyNote(stickyNote: IStickyNote): IStickyNoteSanitized {    
     return {
       id: stickyNote.id,
       title: stickyNote.title,

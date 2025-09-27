@@ -11,14 +11,14 @@ export interface AuthRequest extends Request {
 
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction): void => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const token = req.header('Authorization')?.replace('Bearer ', '');    
 
     if (!token) {
       ResponseHandler.error(res, new AuthenticationError('Access denied. No token provided.'), 401);
       return;
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };    
     req.userId = decoded.userId;
     next();
   } catch (error) {

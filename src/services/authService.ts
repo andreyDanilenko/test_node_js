@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { IUserRepository } from '../repositories/userRepository';
-import { IUserCreate, IAuthResult } from '../interfaces/user.interface';
+import { IUserCreate, IAuthResult, IUserSanitized } from '../interfaces/user.interface';
 import { AuthenticationError } from '../utils/errors';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'very-secret-key';
@@ -9,6 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'very-secret-key';
 export interface IAuthService {
   registerUser(userData: IUserCreate): Promise<IAuthResult>;
   loginUser(email: string, password: string): Promise<IAuthResult>;
+  getUserById(userId: number): Promise<IUserSanitized>;
 }
 
 export class AuthService implements IAuthService {
@@ -43,6 +44,14 @@ export class AuthService implements IAuthService {
     const sanitizedUser = this.userRepository.sanitizeUser(user);
 
     return { user: sanitizedUser, token };
+  }
+
+  async getUserById(userId: number): Promise<IUserSanitized> {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new AuthenticationError('Invalid credentials');
+    }
+    return this.userRepository.sanitizeUser(user);
   }
 
   // Далее можно зашить информацию о роли и тд
